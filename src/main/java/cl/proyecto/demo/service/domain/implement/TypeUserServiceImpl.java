@@ -11,6 +11,11 @@ import reactor.core.publisher.Mono;
 public class TypeUserServiceImpl extends BaseServiceImpl<TypeUserEntity, String> implements TypeUserService {
 
     public Mono<? extends BaseStatusResponse> testMostrar() {
-        return this.okHandlerResponse();
+        try {
+            return this.okHandlerResponse();
+        } catch (Exception ex) {
+            return this.errorHandlerResponse(ex);
+        }
+
     }
 }

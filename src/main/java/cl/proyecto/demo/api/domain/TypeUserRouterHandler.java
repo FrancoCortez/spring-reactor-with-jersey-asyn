@@ -25,14 +25,7 @@ public class TypeUserRouterHandler extends BaseRouterHandler {
     @GET
     @Path("/test2")
     public void test(@Suspended AsyncResponse asyncResponse) {
-        this.typeUserService.testMostrar().subscribe(
-                resp -> {
-                    asyncResponse.resume(this.response(resp));
-                },
-                error -> {
-                    asyncResponse.resume(response(error));
-                }
-        );
+        this.typeUserService.testMostrar().subscribe(resp -> asyncResponse.resume(this.response(resp)));
     }
 
 }

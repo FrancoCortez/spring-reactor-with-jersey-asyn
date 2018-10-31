@@ -2,7 +2,6 @@ package cl.proyecto.demo.service.base;
 
 
 import cl.proyecto.demo.model.entity.base.ObjectIdEntity;
-import cl.proyecto.demo.model.response.utils.BaseResponse;
 import cl.proyecto.demo.model.response.utils.BaseStatusResponse;
 import cl.proyecto.demo.model.response.utils.ErrorHandlerResponse;
 import cl.proyecto.demo.model.response.utils.SuccessHandlerResponse;
@@ -12,37 +11,57 @@ import javax.ws.rs.core.MediaType;
 
 public class BaseServiceImpl<T extends ObjectIdEntity, ID extends String> implements BaseService<T, ID> {
 
-    protected Mono<? extends BaseResponse> errorHandlerResponse(Exception ex) {
-        return Mono.justOrEmpty(ErrorHandlerResponse.builder()
-                .message(ex.getMessage())
-                .trace(ex.getStackTrace())
-                .cause(ex.getCause())
+    protected Mono<BaseStatusResponse> errorHandlerResponse(Exception ex) {
+        return Mono.justOrEmpty(BaseStatusResponse.builder()
+                .status(400)
+                .type(MediaType.APPLICATION_JSON_TYPE)
+                .data(ErrorHandlerResponse.builder()
+                        .message(ex.getMessage())
+                        .trace(ex.getStackTrace())
+                        .cause(ex.getCause())
+                        .build())
                 .build());
     }
 
-    protected Mono<? extends BaseResponse> errorHandlerResponse(String msg) {
-        return Mono.justOrEmpty(ErrorHandlerResponse.builder()
-                .message(msg)
+    protected Mono<BaseStatusResponse> errorHandlerResponse(String msg) {
+        return Mono.justOrEmpty(BaseStatusResponse.builder()
+                .status(400)
+                .type(MediaType.APPLICATION_JSON_TYPE)
+                .data(ErrorHandlerResponse.builder()
+                        .message(msg)
+                        .build())
                 .build());
     }
 
-    protected <K extends ErrorHandlerResponse> Mono<? extends BaseResponse> errorHandlerResponse() {
-        return Mono.justOrEmpty(ErrorHandlerResponse.builder()
-                .message("Error Desconocido!!!")
+    protected Mono<BaseStatusResponse> errorHandlerResponse() {
+        return Mono.justOrEmpty(BaseStatusResponse.builder()
+                .status(400)
+                .type(MediaType.APPLICATION_JSON_TYPE)
+                .data(ErrorHandlerResponse.builder()
+                        .message("Error Desconocido!!")
+                        .build())
                 .build());
     }
 
-    protected <K extends SuccessHandlerResponse> Mono<? extends BaseResponse> okHandlerResponse(String title, Object data) {
-        return Mono.justOrEmpty(SuccessHandlerResponse.builder()
-                .data(data)
-                .title(title)
+    protected Mono<BaseStatusResponse> okHandlerResponse(String title, Object data) {
+        return Mono.justOrEmpty(BaseStatusResponse.builder()
+                .status(200)
+                .type(MediaType.APPLICATION_JSON_TYPE)
+                .data(SuccessHandlerResponse.builder()
+                        .title(title)
+                        .data(data)
+                        .build())
                 .build());
     }
 
-    protected <K extends SuccessHandlerResponse> Mono<? extends BaseResponse> okHandlerResponse(Object data) {
-        return Mono.justOrEmpty(SuccessHandlerResponse.builder()
-                .data(data)
-                .title("Respuesta ok")
+    protected Mono<BaseStatusResponse> okHandlerResponse(Object data) {
+        return Mono.justOrEmpty(BaseStatusResponse.builder()
+                .status(200)
+                .type(MediaType.APPLICATION_JSON_TYPE)
+                .data(SuccessHandlerResponse.builder()
+                        .title("Exito")
+                        .data(data)
+                        .build())
                 .build());
     }
 
